@@ -3,15 +3,15 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://www.pokeclicker.com/
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      Ivan Lay
-// @description Uses the sorting (I recommend Breeding Efficiency) and filters (typically, the region you are in. Many people also use Not Shiny to farm shinies) from the Hatchery screen to add Pokemon to the Hatchery queue. Keeps the queue at 4 Pokemon. Checks every 5 seconds.
+// @description Automatically hatches eggs at 100% completion. Then uses the sorting and filters from the Hatcher to fill it with the best remaining Pokémon.
 // ==/UserScript==
 
 function loopEggs() {
   var eggLoop = setInterval(function () {
     // Attempt to hatch each egg. If the egg is at 100% it will succeed.
-    [0, 1, 2, 3].forEach(index => App.game.breeding.hatchPokemonEgg(index));
+    [0, 1, 2, 3].forEach((index) => App.game.breeding.hatchPokemonEgg(index));
     while (
       App.game.breeding.canAccess() == true && // Can access the Hatchery
       App.game.party.hasMaxLevelPokemon() && // Don't run if you don't have any level 100 Pokemon
