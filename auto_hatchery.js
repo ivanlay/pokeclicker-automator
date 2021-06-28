@@ -10,11 +10,12 @@
 
 function loopEggs() {
   var eggLoop = setInterval(function () {
+    // Attempt to hatch each egg. If the egg is at 100% it will succeed.
+    [0, 1, 2, 3].forEach(index => App.game.breeding.hatchPokemonEgg(index));
     while (
-      App.game.breeding.canAccess() == true && // Can accessthe Hatchery
-      App.game.breeding.queueSlots() >= 4 && // Must have 4 slots
-      App.game.breeding.queueList().length < 4 && // 4 = Pokemon in the queue
-      App.game.party.hasMaxLevelPokemon() // Don't run if you don't have any level 100 Pokemon
+      App.game.breeding.canAccess() == true && // Can access the Hatchery
+      App.game.party.hasMaxLevelPokemon() && // Don't run if you don't have any level 100 Pokemon
+      App.game.breeding.hasFreeEggSlot() // Has an open egg slot
     ) {
       // Filter the sorted list of Pokemon based on the parameters set in the Hatchery screen
       let filteredEggList = App.game.party.caughtPokemon.filter(
@@ -76,9 +77,9 @@ function loopEggs() {
       );
 
       App.game.breeding.addPokemonToHatchery(filteredEggList[0]);
-      //console.log("Added " + filteredEggList[0].name + " to the queue!");
+      //console.log("Added " + filteredEggList[0].name + " to the Hatchery!");
     }
-  }, 5000); // Checks every 5 seconds.
+  }, 50); // Checks every game tick.
 }
 
 loopEggs();
