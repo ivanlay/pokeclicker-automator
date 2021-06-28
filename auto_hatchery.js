@@ -11,6 +11,8 @@
 function loopEggs() {
   var eggLoop = setInterval(function () {
     while (
+      App.game.breeding.canAccess() == true && // Can accessthe Hatchery
+      App.game.breeding.queueSlots() >= 4 && // Must have 4 slots
       App.game.breeding.queueList().length < 4 && // 4 = Pokemon in the queue
       App.game.party.hasMaxLevelPokemon() // Don't run if you don't have any level 100 Pokemon
     ) {
