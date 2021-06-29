@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://www.pokeclicker.com/
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      Ivan Lay
 // @description Clicks through battles appropriately depending on the game state.
 // ==/UserScript==
@@ -23,6 +23,11 @@ function autoClicker() {
     // Click while in a dungeon - will also interact with non-battle tiles (e.g. chests)
     if (App.game.gameState === GameConstants.GameState.dungeon) {
       DungeonRunner.handleClick();
+    }
+
+    // Click while in Safari battles
+    if (Safari.inBattle()) {
+      BattleFrontierBattle.clickAttack();
     }
   }, 50); // The app is hard-capped at 50
 }
