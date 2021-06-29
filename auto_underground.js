@@ -12,7 +12,8 @@ function useBomb() {
   while (
     App.game.underground.getMaxEnergy() -
       Math.floor(App.game.underground.energy) <=
-    App.game.underground.getEnergyGain() + 2
+    App.game.underground.getEnergyGain() *
+      App.game.oakItems.calculateBonus(OakItems.OakItem.Cell_Battery)
   ) {
     Mine.bomb();
     //console.log("Mined!");
