@@ -15,9 +15,7 @@ function loopEggs() {
 
     // Now add eggs to empty slots if we can
     while (
-      App.game.breeding.canAccess() == true && // Can access the Hatchery
-      App.game.party.hasMaxLevelPokemon() && // Don't run if you don't have any level 100 Pokemon
-      App.game.breeding.hasFreeEggSlot() // Has an open egg slot
+      App.game.breeding.canBreedPokemon() // Helper in code to do this.
     ) {
       // Filter the sorted list of Pokemon based on the parameters set in the Hatchery screen
       let filteredEggList = App.game.party.caughtPokemon.filter(
@@ -78,8 +76,10 @@ function loopEggs() {
         }
       );
 
-      App.game.breeding.addPokemonToHatchery(filteredEggList[0]);
-      //console.log("Added " + filteredEggList[0].name + " to the Hatchery!");
+        if(App.game.breeding.canBreedPokemon()) {
+            App.game.breeding.addPokemonToHatchery(filteredEggList[0]);
+            console.log("Added " + filteredEggList[0].name + " to the Hatchery!");
+        }
     }
   }, 50); // Runs every game tick
 }
