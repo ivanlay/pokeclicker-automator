@@ -17,13 +17,13 @@ function autoClicker() {
 
     // Click while in a gym battle
     if (App.game.gameState === GameConstants.GameState.gym) {
-      GymBattle.clickAttack();
+      GymBattle.clickAttack( 10000000000000 );
     }
 
     // Click while in a dungeon - will also interact with non-battle tiles (e.g. chests)
     if (App.game.gameState === GameConstants.GameState.dungeon) {
       if (DungeonRunner.fighting() && !DungeonBattle.catching()) {
-        DungeonBattle.clickAttack();
+        DungeonBattle.clickAttack(100000000000000 );
       } else if (
         DungeonRunner.map.currentTile().type() ===
         GameConstants.DungeonTile.chest
@@ -42,7 +42,7 @@ function autoClicker() {
     if (Safari.inBattle()) {
       BattleFrontierBattle.clickAttack();
     }
-  }, 50); // The app hard-caps click attacks at 50
+  }, 100000000); // The app hard-caps click attacks at 100000000
 }
 
 autoClicker();
