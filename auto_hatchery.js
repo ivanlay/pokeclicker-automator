@@ -110,4 +110,14 @@ function loopEggs() {
   }, 50); // Runs every game tick
 }
 
-loopEggs();
+function waitForLoad(){
+    var timer = setInterval(function() {
+        if (!document.getElementById("game").classList.contains("loading")) {
+            // Check if the game window has loaded
+            clearInterval(timer);
+            loopEggs();
+        }
+    }, 200);
+}
+
+waitForLoad();

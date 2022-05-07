@@ -71,4 +71,14 @@ function autoClicker() {
   }, 50); // The app hard-caps click attacks at 50
 }
 
-autoClicker();
+function waitForLoad(){
+    var timer = setInterval(function() {
+        if (!document.getElementById("game").classList.contains("loading")) {
+            // Check if the game window has loaded
+            clearInterval(timer);
+            autoClicker();
+        }
+    }, 200);
+}
+
+waitForLoad();

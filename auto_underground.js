@@ -27,4 +27,14 @@ function loopMine() {
   }, 10000); // Every 10 seconds
 }
 
-loopMine();
+function waitForLoad(){
+    var timer = setInterval(function() {
+        if (!document.getElementById("game").classList.contains("loading")) {
+            // Check if the game window has loaded
+            clearInterval(timer);
+            loopMine();
+        }
+    }, 200);
+}
+
+waitForLoad();
