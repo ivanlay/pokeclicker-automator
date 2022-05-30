@@ -33,7 +33,7 @@ function ToggleHatcheryAutomation(){
 }
 
 function getHatcherySortedPokemon(pokemonList) {
-  return pokemonList.sort(PartyController.compareBy(Settings.getSetting('hatcherySort').observableValue(), Settings.getSetting('hatcherySortDirection').observableValue())
+  return pokemonList.sort(PartyController.compareBy(Settings.getSetting('hatcherySort').observableValue(), Settings.getSetting('hatcherySortDirection').observableValue()));
 }
 
 function loopEggs() {
