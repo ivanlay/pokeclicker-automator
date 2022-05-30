@@ -32,6 +32,10 @@ function ToggleHatcheryAutomation(){
     }
 }
 
+function getHatcherySortedPokemon(pokemonList) {
+  return pokemonList.sort(PartyController.compareBy(Settings.getSetting('hatcherySort').observableValue(), Settings.getSetting('hatcherySortDirection').observableValue())
+}
+
 function loopEggs() {
   var eggLoop = setInterval(function () {
     if (hatcheryAutomationEnabled) {
@@ -41,7 +45,7 @@ function loopEggs() {
       // Now add eggs to empty slots if we can
       while (App.game.breeding.canBreedPokemon()) {  // Helper in code to do this.
         // Filter the sorted list of Pokemon based on the parameters set in the Hatchery screen
-        let filteredEggList = PartyController.getHatcherySortedList().filter(partyPokemon => BreedingController.visible(partyPokemon)());
+        const filteredEggList = getHatcherySortedPokemon(App.game.party.caughtPokemon.filter(partyPokemon => BreedingController.visible(partyPokemon)()));
 
         if(App.game.breeding.canBreedPokemon()) {
           App.game.breeding.addPokemonToHatchery(filteredEggList[0]);
