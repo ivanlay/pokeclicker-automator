@@ -8,31 +8,76 @@
 // @description Clicks through battles appropriately depending on the game state.
 // ==/UserScript==
 var autoClick = true;
+var autoOpenChest = false;
+var autoFightBoss = false;
+var autoRevealDungeon = false;
 var node = document.createElement('div');
 node.classList.add('card');
 node.classList.add('mb-3');
-node.innerHTML = '<div id="scriptClickAutomation" class="card-header"><span>AutoClick</span></div><div id="clickBody" class="card-body"><button id="toggleClick" class="btn btn-success" type="button">'
-               + 'AutoClick Enabled</button></div>'
+node.innerHTML = '<div id="scriptClickAutomation" class="card-header">'
+               + '<span>AutoClick</span>'
+               + '</div>'
+               + '<div id="clickBody" class="card-body btn-group">'
+               + '<button id="toggleClick" class="btn btn-success" type="button">AutoClick On</button>'
+               + '<button id="toggleBossfight" class="btn btn-danger" type="button">AutoFightBoss Off</button>'
+               + '<button id="toggleChestOpening" class="btn btn-danger" type="button">AutoOpenChest Off</button>'
+               + '<button id="toggleAutoReveal" class="btn btn-danger" type="button">AutoReveal Off</button>'
+               + '</div>';
 
-node.setAttribute('id', 'autoClickContainer');
-document.getElementById('left-column').appendChild(node);
-document.getElementById('toggleClick').addEventListener('click', ToggleAutoClick, false);
+// Top-left corner is 0.0
+// This returns an object with 2 values ; x (horizontal position) and y (vertical position)
+function GetPlayerPosition(){
+    return DungeonRunner.map.playerPosition();
+}
+function MoveTo(x, y){
+    DungeonRunner.map.moveToCoordinates(x, y);
+}
+function RevealMap(){
+    DungeonRunner.map.showAllTiles();
+}
 
+function ToggleAutoOpenChest(){
+    autoOpenChest = !autoOpenChest;
+    toggleBtn('toggleChestOpening', autoOpenChest, "AutoOpenChest");
+    return autoOpenChest;
+}
+function ToggleAutoFightBoss(){
+    autoFightBoss = !autoFightBoss;
+    toggleBtn('toggleBossfight', autoFightBoss, "AutoFightBoss");
+    return autoFightBoss;
+}
 function ToggleAutoClick(){
     autoClick = !autoClick;
-    var button = document.getElementById('toggleClick');
-    if (!autoClick) {
+    toggleBtn('toggleClick', autoClick, "AutoClick");
+    return autoClick;
+}
+function ToggleAutoReveal(){
+    autoRevealDungeon = !autoRevealDungeon;
+    toggleBtn('toggleAutoReveal', autoRevealDungeon, "AutoReveal");
+    return autoRevealDungeon;
+}
+
+function toggleBtn(id, state, name) {
+    var button = document.getElementById(id);
+    if (!state) {
         button.classList.remove('btn-success');
         button.classList.add('btn-danger');
-        button.innerText = 'AutoClick Disabled';
+        button.innerText = name + ' Off';
     } else {
         button.classList.remove('btn-danger');
         button.classList.add('btn-success');
-        button.innerText = 'AutoClick Enabled';
+        button.innerText = name + ' On';
     }
 }
 
 function autoClicker() {
+  node.setAttribute('id', 'autoClickContainer');
+  document.getElementById('battleContainer').appendChild(node);
+  document.getElementById('toggleClick').addEventListener('click', ToggleAutoClick, false);
+  document.getElementById('toggleChestOpening').addEventListener('click', ToggleAutoOpenChest, false);
+  document.getElementById('toggleBossfight').addEventListener('click', ToggleAutoFightBoss, false);
+  document.getElementById('toggleAutoReveal').addEventListener('click', ToggleAutoReveal, false);
+
   var autoClickerLoop = setInterval(function () {
     if (autoClick){
         // Click while in a normal battle
@@ -47,18 +92,14 @@ function autoClicker() {
 
         // Click while in a dungeon - will also interact with non-battle tiles (e.g. chests)
         if (App.game.gameState === GameConstants.GameState.dungeon) {
+            if(autoRevealDungeon){
+                RevealMap();
+            }
             if (DungeonRunner.fighting() && !DungeonBattle.catching()) {
                 DungeonBattle.clickAttack();
-            } else if (
-                DungeonRunner.map.currentTile().type() ===
-                GameConstants.DungeonTile.chest
-            ) {
+            } else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.chest && autoOpenChest) {
                 DungeonRunner.openChest();
-            } else if (
-                DungeonRunner.map.currentTile().type() ===
-                GameConstants.DungeonTile.boss &&
-                !DungeonRunner.fightingBoss()
-            ) {
+            } else if (DungeonRunner.map.currentTile().type() === GameConstants.DungeonTile.boss && !DungeonRunner.fightingBoss() && autoFightBoss) {
                 DungeonRunner.startBossFight();
             }
         }
